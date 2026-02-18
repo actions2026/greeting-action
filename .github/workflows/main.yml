@@ -1,4 +1,4 @@
-name: Custom Action Demo
+name: Habeeb Custom Action Demo
 on:
   push:
     branches:
