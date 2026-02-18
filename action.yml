@@ -23,4 +23,6 @@ runs:
       shell: bash
       run: |
         echo "Hello ${{ inputs.username }}, welcome to ${{ inputs.season }} season."
-        echo "message=Hello ${{ inputs.username }}" >> $GITHUB_OUTPUT
+        echo "message=Hello ${{ inputs.username }}" >> $GITHUB_OUTPUT  
+    #GITHUB_OUTPUT file stores variables with values in it, you get the output using steps.<IDofStepOutputwasCreated>.outputs.<VariableKey> 
+    #message is the variable key here.
