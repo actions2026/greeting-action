@@ -14,7 +14,7 @@ jobs:
       - name: calling custom action yml
         id: greet
        # uses: ./ #the location of action (function). This says current dir
-        uses: actions2026/greeting-action@v1.0
+        uses: actions2026/greeting-action@v1.0 #using marketplace downloads the actions, so no need to checkout the code here
         with:
           username: Obalola
       - name: Using Action output
