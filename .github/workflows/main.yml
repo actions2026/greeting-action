@@ -8,8 +8,9 @@ jobs:
   greet-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      # - name: Checkout Code
+      #   uses: actions/checkout@v4
+      # we checked out code because we were using path to action. The action file needed to be present on the runner to work
       - name: calling custom action yml
         id: greet
        # uses: ./ #the location of action (function). This says current dir
