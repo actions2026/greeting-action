@@ -1,0 +1,17 @@
+name: Custom Action Demo
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  greet-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: calling custom action yml
+        id: greet
+        uses: ./ #the location of action (function). This says current dir
+        with:
+          username: Obalola
+      - name: Using Action output
+        run: echo "Action says - ${{ steps.greet.outputs.message }}"
