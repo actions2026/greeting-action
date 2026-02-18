@@ -1,4 +1,4 @@
-name: "Simple Greeting Action"
+name: "Habeebs Simple Greeting Action"
 description: A Custom GitHub Action to print a greeting message
 
 inputs:
