@@ -10,7 +10,7 @@ inputs:
     required: false
     default: Summer
 
-outputs:
+outputs:  #we use outputs whenever we want to use a variable created and stored in $GITHUB_OUTPUT in another job, we need this because we are using it outside the created step
   message:
     description: "Generated greeting message"
     value: ${{ steps.greet.outputs.message }}
