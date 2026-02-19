@@ -1,3 +1,4 @@
+#OUR CUSTOM ACTION THAT ECHOES A SIMPLE GREETING
 name: "Habeebs Simple Greeting Action"
 description: A Custom GitHub Action to print a greeting message
 
