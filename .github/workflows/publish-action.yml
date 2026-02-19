@@ -1,0 +1,70 @@
+name: Publish Custom Action
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  publish-action:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required to read tag history
+      - name: Read Major Version
+        id: major-version
+        run: |
+          echo "major=${{ vars.ACTION_MAJOR_VERSION}}" >> $GITHUB_OUTPUT
+          echo "Using major version: ${{ vars.ACTION_MAJOR_VERSION }}"
+      - name: Get Latest Tag
+        id: tags
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag --sort=-v:refname | head -n 1)
+
+          if [ -z "$LATEST_TAG" ]; then
+            echo "latest=none" >> $GITHUB_OUTPUT
+          else
+            echo "latest=$LATEST_TAG" >> $GITHUB_OUTPUT
+          fi
+
+          echo "Latest tag = ${LATEST_TAG:-none}"
+      - name: Calculate Next TAG version
+        id: next-tag
+        run: |
+          MAJOR=${{ steps.major-version.outputs.major }}
+          LATEST_TAG=${{ steps.tags.outputs.latest }}
+          echo "Latest tag is $LATEST_TAG"
+          echo "Major version is $MAJOR"
+          if [ "$LATEST_TAG" = "none" ]; then
+            NEXT_TAG="${MAJOR}.0"
+            echo "next=$NEXT_TAG" >> $GITHUB_OUTPUT
+            echo "No previous tags found. New tag = $NEXT_TAG"
+            exit 0
+          fi
+          LATEST_MAJOR=$(echo $LATEST_TAG | cut -d '.' -f1) 
+
+          if [ "$LATEST_MAJOR" = "$MAJOR" ]; then
+            MINOR=$(echo $LATEST_TAG | cut -d '.' -f2)
+            NEXT_MINOR=$((MINOR + 1))
+            NEXT_TAG="${MAJOR}.${NEXT_MINOR}"
+          else
+            NEXT_TAG="${MAJOR}.0"
+          fi
+
+          echo "Next tag = $NEXT_TAG"
+          echo "next=$NEXT_TAG" >> $GITHUB_OUTPUT
+      - name: Create and Push Tag
+        run: |
+          TAG="${{ steps.next-tag.outputs.next }}"
+          git tag "$TAG"
+          git push origin "$TAG"
+      - name: Publish GitHub Action
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.next-tag.outputs.next }}
+          generate_release_notes: true
